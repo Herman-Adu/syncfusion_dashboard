@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { FiSettings } from "react-icons/fi";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 
 import { Navbar, Footer, Sidebar, ThemeSettings } from "./components";
+
 import {
   Ecommerce,
   Orders,
@@ -22,19 +23,31 @@ import {
   ColorMapping,
   Editor,
 } from "./pages";
+
 import "./App.css";
 
 import { useStateContext } from "./contexts/ContextProvider";
 
 const App = () => {
   const {
-    currentColor,
+    setCurrentColor,
     setCurrentMode,
     currentMode,
     activeMenu,
+    currentColor,
     themeSettings,
     setThemeSettings,
   } = useStateContext();
+
+  useEffect(() => {
+    const currentThemeColor = localStorage.getItem("colorMode");
+    const currentThemeMode = localStorage.getItem("themeMode");
+    if (currentThemeColor && currentThemeMode) {
+      setCurrentColor(currentThemeColor);
+      setCurrentMode(currentThemeMode);
+    }
+  }, [setCurrentColor, setCurrentMode]);
+
   return (
     <div className={currentMode === "Dark" ? "dark" : ""}>
       <BrowserRouter>
@@ -100,6 +113,7 @@ const App = () => {
                 <Route path="/stacked" element={<Stacked />} />
               </Routes>
             </div>
+            <Footer />
           </div>
         </div>
       </BrowserRouter>
